@@ -11,8 +11,8 @@ dependencies:
   - attrs=19.1.0
   - black=19.3b0
   - blas=1.0
-  - ca-certificates=2019.6.16
-  - certifi=2019.6.16
+  - ca-certificates=2019.11.27
+  - certifi=2019.11.28
   - click=7.0
   - cycler=0.10.0
   - dbus=1.13.6
@@ -46,7 +46,7 @@ dependencies:
   - mkl_fft=1.0.14
   - mkl_random=1.0.2
   - ncurses=6.1
-  - openssl=1.1.1c
+  - openssl=1.1.1d
   - pcre=8.41
   - pip=19.1.1
   - pthread-stubs=0.4
@@ -85,7 +85,9 @@ dependencies:
     - packaging==19.2
     - pluggy==0.13.1
     - protobuf==3.11.2
+    - psutil==5.6.7
     - py==1.8.0
+    - py-spy==0.3.1
     - pyrsistent==0.15.6
     - pytest==5.3.2
     - pyyaml==5.2
@@ -93,6 +95,7 @@ dependencies:
     - redis==3.3.11
     - s3transfer==0.2.1
     - scipy==1.4.1
+    - setproctitle==1.1.10
     - urllib3==1.25.7
     - wcwidth==0.1.7
     - zipp==0.6.0
