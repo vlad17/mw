@@ -34,9 +34,41 @@ conda env update -f environment.yaml --prune
 All modules are expected to be run from the root directory of the repository
 
 ```
-python -m linreg.main.gendata --help
-python -m linreg.main.train --help
-python -m linreg.main.eval --help
+# re-use the same ray cluster between invocations
+REDIS_PORT=6379
+ray start --num-cpus $(($(nproc) - 1)) --redis-port $REDIS_PORT --head
+RAY_ADDRESS="$(python -c 'import ray;print(ray.services.get_node_ip_address())'):$REDIS_PORT"
 
-./scripts/run.sh  1000 100 100 1000 1000 # n p snr iters_sgd iters_full
+# generate game matrix with a small warmup
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
+  shortname="$(echo $game | tr -d '-' | tr -d ' ')"
+  python scripts/online.py --outfile "./data/${shortname}" \
+    $game --T 100 --eps 0.1 --ray_address $RAY_ADDRESS
+done
+
+# submit jobs to ray for sim
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
+  shortname="$(echo $game | tr -d '-' | tr -d ' ')"
+  for eps in 0.1 0.01 0.001 ; do 
+    python scripts/online.py \
+      --outfile "./data/${shortname}eps${eps}" \
+      --T 100000000 --eps $eps \
+      $game \
+      --ray_address $RAY_ADDRESS \
+      --reuse_game_matrix "./data/${shortname}.npz" &
+  done
+done ; \
+wait
+
+# plot into ./data/plot*.pdf
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
+  shortname="$(echo $game | tr -d '-' | tr -d ' ')"
+  flags="--oufile data/plot${shortname}.pdf"
+  for eps in 0.1 0.01 0.001 ; do 
+    flags="$flags --runs \"./data/${shortname}eps${eps}\""
+  done
+  plotcmd="python scripts/optimality_gapy.py $flags"
+  echo $plotcmd
+  $plotcmd
+done
 ```

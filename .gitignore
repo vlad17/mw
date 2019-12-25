@@ -3,6 +3,7 @@
 
 # Data-dependent things
 data/*
+!data/plot*.pdf
 !data/README.md
 logs/*
 !logs/README.md

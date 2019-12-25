@@ -48,14 +48,6 @@ def main(argv):
     A = make_example(n)
 
     print('created {}x{} example'.format(n, n))
-    res = scipy.optimize.linprog(
-        c=np.ones(n),
-        A_ub=-A,
-        b_ub=-np.ones(n),
-        bounds=(0, None))
-    assert res.success, res
-    opt_value = 1 / res.fun
-    opt_probs = res.x / res.fun
 
     print('optimal perf', opt_value)
 
