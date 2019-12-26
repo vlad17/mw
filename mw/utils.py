@@ -147,3 +147,35 @@ class OnlineSampler:
         if random.random() < self.k / self.n:
             i = random.randrange(self.k)
             self.sample[i] = example
+
+class OnlineAverage:
+    """
+    Online, numerically stable, averaging algorithm.
+
+    Vectorized.
+    """
+
+    def __init__(self, init=0):
+        self.avg = None
+        self.n = 0
+
+    def update(self, example):
+        """
+        Observe a datapoint from the incoming stream and
+        add its effect on the average.
+
+        Returns updated self.value.
+        """
+        self.n += 1
+        if self.avg is None:
+            self.avg = np.zeros_like(example)
+
+        self.avg += (example - self.avg) / self.n
+
+        return self.value()
+
+    def value(self):
+        """
+        Return the current sample average.
+        """
+        return self.avg
