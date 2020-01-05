@@ -59,7 +59,7 @@ function asubmit() {
 }
 
 # generate game matrix with a small warmup
-for game in "--n 25 --m 40" "--n 10 --m 100" ; do
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
   shortname="$(echo $game | tr -d '-' | tr -d ' ')"
   args=" --outfile $REPO_ROOT/data/${shortname} "
   args="$args $game --T 100 --eps 0.1 --ray_address $RAY_ADDRESS"
@@ -67,10 +67,28 @@ for game in "--n 25 --m 40" "--n 10 --m 100" ; do
 done
 
 # submit jobs to ray for sim
-for game in "--n 25 --m 40" "--n 10 --m 100" ; do
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
   shortname="$(echo $game | tr -d '-' | tr -d ' ')"
   for eps in 0.1 0.01 0.001 ; do 
     fname="${shortname}eps${eps}"
+    if [ "$fname" = "n10m100eps0.001" ] ; then
+      continue
+    fi
+    if [ "$fname" = "n25m40eps0.001" ] ; then
+      continue
+    fi
+    if [ "$fname" = "n25m40eps0.01" ] ; then
+      continue
+    fi
+    if [ "$fname" = "n25m40eps0.1" ] ; then
+      continue
+    fi
+    if [ "$fname" = "n5m200eps0.001" ] ; then
+      continue
+    fi
+    if [ "$fname" = "n5m200eps0.01" ] ; then
+      continue
+    fi
     args="--outfile $REPO_ROOT/data/$fname"
     args="$args --T 100000000 --eps $eps"
     args="$args $game --ray_address $RAY_ADDRESS"
@@ -79,7 +97,7 @@ for game in "--n 25 --m 40" "--n 10 --m 100" ; do
   done
 done
 
-for game in "--n 25 --m 40" "--n 10 --m 100" ; do
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
   shortname="$(echo $game | tr -d '-' | tr -d ' ')"
   args="--outfile $REPO_ROOT/data/${shortname}eps0.5decay0.5"
   args="$args --T 100000000 --eps 0.5 --decay 0.5"
@@ -91,7 +109,7 @@ done
 ray rsync-down ./config/ray-aws.yaml "~/mw-repo/data" ./data
 
 # plot into ./data/plot*.pdf
-for game in "--n 25 --m 40" "--n 10 --m 100" ; do
+for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
   shortname="$(echo $game | tr -d '-' | tr -d ' ')"
   flags="--outfile data/plot${shortname}.pdf"
   for eps in 0.1 0.01 0.001 ; do 
