@@ -71,24 +71,6 @@ for game in "--n 25 --m 40" "--n 10 --m 100" "--n 5 --m 200" ; do
   shortname="$(echo $game | tr -d '-' | tr -d ' ')"
   for eps in 0.1 0.01 0.001 ; do 
     fname="${shortname}eps${eps}"
-    if [ "$fname" = "n10m100eps0.001" ] ; then
-      continue
-    fi
-    if [ "$fname" = "n25m40eps0.001" ] ; then
-      continue
-    fi
-    if [ "$fname" = "n25m40eps0.01" ] ; then
-      continue
-    fi
-    if [ "$fname" = "n25m40eps0.1" ] ; then
-      continue
-    fi
-    if [ "$fname" = "n5m200eps0.001" ] ; then
-      continue
-    fi
-    if [ "$fname" = "n5m200eps0.01" ] ; then
-      continue
-    fi
     args="--outfile $REPO_ROOT/data/$fname"
     args="$args --T 100000000 --eps $eps"
     args="$args $game --ray_address $RAY_ADDRESS"
